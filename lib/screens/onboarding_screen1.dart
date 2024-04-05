@@ -3,6 +3,7 @@ import 'package:auth_healthcare_app/screens/home_screen.dart';
 import 'package:auth_healthcare_app/screens/onboarding_screen2.dart';
 import 'package:auth_healthcare_app/widgets/headline.dart';
 import 'package:auth_healthcare_app/widgets/image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -48,13 +49,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
                 itemBuilder: (_, i) {
                   return Column(children: [
-                    Image.asset(
-                      contents[i].image,
-                      height: sHeight * 0.7,
+                    Expanded(
+                      child: Image.asset(
+                        contents[i].image,
+                        // height: sHeight * 0.7,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.all(20),
-                      height: sHeight * 0.3,
+                      // height: sHeight * 0.3,
                       width: double.maxFinite,
                       decoration: const BoxDecoration(
                           color: Colors.white,
@@ -73,20 +77,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 100,
+                            height: 50,
                           ),
                           Text(
                             contents[i].text,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Color(0xFF101522),
                               fontSize: 25,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
-                              height: 0.06,
                             ),
                           ),
                           SizedBox(
-                            height: 60,
+                            height: 40,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

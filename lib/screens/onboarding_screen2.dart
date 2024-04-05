@@ -1,4 +1,6 @@
 import 'package:auth_healthcare_app/screens/login_screen.dart';
+import 'package:auth_healthcare_app/screens/register_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,7 +22,7 @@ class OnboardingLoginSignUp extends StatelessWidget {
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
               Text(
-                "Login to enjoy the features we've\nprovided, and stay healthy!",
+                "Login to enjoy the features we've provided, and stay healthy!",
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.black38,
@@ -52,18 +54,24 @@ class OnboardingLoginSignUp extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                width: double.infinity,
-                child: Center(
-                    child: Text(
-                  "Sign Up",
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: 20),
-                )),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Theme.of(context).primaryColor),
-                    borderRadius: BorderRadius.circular(30)),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (_) => RegisterScreen()));
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  width: double.infinity,
+                  child: Center(
+                      child: Text(
+                    "Register",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 20),
+                  )),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(30)),
+                ),
               ),
             ],
           ),

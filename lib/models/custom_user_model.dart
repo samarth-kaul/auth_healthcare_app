@@ -26,3 +26,42 @@ class User {
     };
   }
 }
+
+
+
+// RichText(
+//                       text: const TextSpan(
+//                         children: [
+//                           TextSpan(
+//                             text: 'I agree to the ',
+//                             style: TextStyle(
+//                               fontSize: 16,
+//                               color: Colors.black,
+//                             ),
+//                           ),
+//                           TextSpan(
+//                             text: 'Terms of Service',
+//                             style: TextStyle(
+//                               fontSize: 16,
+//                               color: Colors.green, // Green color
+//                               fontWeight: FontWeight.bold,
+//                             ),
+//                           ),
+//                           TextSpan(
+//                             text: ' and ',
+//                             style: TextStyle(
+//                               fontSize: 16,
+//                               color: Colors.black,
+//                             ),
+//                           ),
+//                           TextSpan(
+//                             text: 'Privacy Policy',
+//                             style: TextStyle(
+//                               fontSize: 16,
+//                               color: Colors.green, // Green color
+//                               fontWeight: FontWeight.bold,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ),

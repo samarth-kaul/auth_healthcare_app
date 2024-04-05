@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         primaryColor: const Color(0xff147B72),
       ),
-      home: LoginScreen(),
+      home: OnboardingScreen(),
     );
   }
 }
