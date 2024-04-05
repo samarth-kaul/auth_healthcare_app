@@ -8,14 +8,14 @@ class OnboardingContent {
 List<OnboardingContent> contents = [
   OnboardingContent(
     text: 'Consult with a doctor you trust',
-    image: 'assets/images/doc-patient.png',
+    image: 'assets/images/onb1.png',
   ),
   OnboardingContent(
     text: 'Find a lot of specialist doctors in one place',
-    image: 'assets/images/doc-patient.png',
+    image: 'assets/images/onb2.png',
   ),
   OnboardingContent(
     text: 'Get our online consultaion',
-    image: 'assets/images/doc-patient.png',
+    image: 'assets/images/onb3.png',
   ),
 ];

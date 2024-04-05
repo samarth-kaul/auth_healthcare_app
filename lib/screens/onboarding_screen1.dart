@@ -1,5 +1,6 @@
 import 'package:auth_healthcare_app/models/onboarding_model.dart';
 import 'package:auth_healthcare_app/screens/home_screen.dart';
+import 'package:auth_healthcare_app/screens/onboarding_screen2.dart';
 import 'package:auth_healthcare_app/widgets/headline.dart';
 import 'package:auth_healthcare_app/widgets/image.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                         borderRadius: BorderRadius.circular(20),
                                         color: currentIndex == index
                                             ? const Color(0xff147B72)
-                                            : Colors.blueGrey,
+                                            : Colors.grey,
                                       ),
                                       height: 10,
                                       width: currentIndex == index ? 25 : 10,
@@ -115,7 +116,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => HomeScreen(),
+                                        builder: (_) =>
+                                            const OnboardingLoginSignUp(),
                                       ),
                                     );
                                   }

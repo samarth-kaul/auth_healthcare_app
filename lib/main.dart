@@ -1,5 +1,6 @@
 import 'package:auth_healthcare_app/screens/login_screen.dart';
 import 'package:auth_healthcare_app/screens/onboarding_screen1.dart';
+import 'package:auth_healthcare_app/screens/onboarding_screen2.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         primaryColor: const Color(0xff147B72),
       ),
-      home: OnboardingScreen(),
+      home: LoginScreen(),
     );
   }
 }
