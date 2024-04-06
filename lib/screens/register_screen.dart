@@ -45,6 +45,8 @@ class RegisterScreenState extends State<RegisterScreen> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color(0xffF3F3F3),
                       labelText: "Name",
                       labelStyle: TextStyle(color: Colors.black38),
                       prefixIcon: const Icon(
@@ -63,6 +65,8 @@ class RegisterScreenState extends State<RegisterScreen> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color(0xffF3F3F3),
                       labelText: "Email",
                       labelStyle: const TextStyle(color: Colors.black38),
                       prefixIcon: const Icon(
@@ -81,6 +85,8 @@ class RegisterScreenState extends State<RegisterScreen> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color(0xffF3F3F3),
                       labelText: "Password",
                       labelStyle: const TextStyle(color: Colors.black38),
                       prefixIcon: const Icon(
@@ -271,10 +277,10 @@ class RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         SvgPicture.asset(
                           "assets/apple_svg.svg",
-                          height: sHeight * 0.05,
-                          width: sWidth * 0.05,
+                          height: sHeight * 0.06,
+                          width: sWidth * 0.06,
                         ),
-                        SizedBox(width: sWidth * 0.12),
+                        SizedBox(width: sWidth * 0.06),
                         const Text(
                           "Sign in with Apple",
                           style: TextStyle(

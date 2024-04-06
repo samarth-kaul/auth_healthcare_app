@@ -126,7 +126,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     );
                                   }
                                   _controller.nextPage(
-                                    duration: const Duration(milliseconds: 150),
+                                    duration: const Duration(milliseconds: 100),
                                     curve: Curves.bounceIn,
                                   );
                                 },

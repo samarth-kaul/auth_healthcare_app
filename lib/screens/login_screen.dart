@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'package:auth_healthcare_app/screens/home_screen.dart';
 import 'package:auth_healthcare_app/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +15,53 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailCtor = TextEditingController();
+  TextEditingController passCtor = TextEditingController();
+
+  Future<void> _login() async {
+    final response = await http.post(
+      Uri.parse('YOUR_LOGIN_API_ENDPOINT'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, String>{
+        'email': emailCtor.text,
+        'password': passCtor.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Successful login
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+      // Failed login
+      _showErrorDialog("Login Failed", "Invalid Credentials");
+    }
+  }
+
+  void _showErrorDialog(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -43,6 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color(0xffF3F3F3),
                       labelText: "Email",
                       labelStyle: TextStyle(color: Colors.black38),
                       prefixIcon: const Icon(
@@ -61,6 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color(0xffF3F3F3),
                       labelText: "Password",
                       labelStyle: const TextStyle(color: Colors.black38),
                       prefixIcon: const Icon(
@@ -158,8 +211,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         SvgPicture.asset(
                           "assets/google_svg.svg",
-                          height: sHeight * 0.06,
-                          width: sWidth * 0.06,
+                          height: sHeight * 0.05,
+                          width: sWidth * 0.05,
                         ),
                         SizedBox(width: sWidth * 0.06),
                         const Text(
@@ -183,8 +236,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         SvgPicture.asset(
                           "assets/fb_svg.svg",
-                          height: sHeight * 0.06,
-                          width: sWidth * 0.06,
+                          height: sHeight * 0.05,
+                          width: sWidth * 0.05,
                         ),
                         SizedBox(width: sWidth * 0.06),
                         const Text(
@@ -205,14 +258,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(color: Colors.black12)),
                     child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.values,
                       children: [
                         SvgPicture.asset(
                           "assets/apple_svg.svg",
                           height: sHeight * 0.05,
                           width: sWidth * 0.05,
                         ),
-                        SizedBox(width: sWidth * 0.12),
+                        SizedBox(width: sWidth * 0.06),
                         const Text(
                           "Sign in with Apple",
                           style: TextStyle(
