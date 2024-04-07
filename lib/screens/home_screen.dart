@@ -1,4 +1,5 @@
 import 'package:auth_healthcare_app/models/doctor_details.dart';
+import 'package:auth_healthcare_app/screens/article_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -127,6 +128,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 ),
+              ),
+              ElevatedButton(
+                child: Text("dkjn"),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => ArticleScreen()));
+                },
               ),
             ],
           ),
