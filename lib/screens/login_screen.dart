@@ -38,29 +38,31 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else {
       // Failed login
-      _showErrorDialog("Login Failed", "Invalid Credentials");
+      // _showErrorDialog("Login Failed", "Invalid Credentials");
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login Failed: Invalid Credentials")));
     }
   }
 
-  void _showErrorDialog(String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showErrorDialog(String title, String content) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(title),
+  //         content: Text(content),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: Text("OK"),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
