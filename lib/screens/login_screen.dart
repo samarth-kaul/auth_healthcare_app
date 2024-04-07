@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:auth_healthcare_app/models/UserLoginRequest.dart';
 import 'package:auth_healthcare_app/screens/home_screen.dart';
 import 'package:auth_healthcare_app/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,15 +19,15 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailCtor = TextEditingController();
   TextEditingController passCtor = TextEditingController();
 
-  Future<void> _login() async {
+  Future<void> _login(String email, String password) async {
     final response = await http.post(
       Uri.parse('YOUR_LOGIN_API_ENDPOINT'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, String>{
-        'email': emailCtor.text,
-        'password': passCtor.text,
+        'email': email,
+        'password': password,
       }),
     );
 
@@ -151,8 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   GestureDetector(
                     onTap: () {
                       print("login pressed");
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (_) => HomeScreen()));
+                      _login(emailCtor.text, passCtor.text);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 14),

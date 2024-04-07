@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:auth_healthcare_app/screens/home_screen.dart';
 import 'package:auth_healthcare_app/screens/login_screen.dart';
 import 'package:auth_healthcare_app/screens/register_screen.dart';
@@ -14,7 +16,38 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class RegisterScreenState extends State<RegisterScreen> {
+  TextEditingController emailCtor = TextEditingController();
+  TextEditingController passCtor = TextEditingController();
+  TextEditingController nameCtor = TextEditingController();
   bool isChecked = false;
+
+  Future<void> _register(String email, String password) async {
+    final response = await http.post(
+      Uri.parse('YOUR_LOGIN_API_ENDPOINT'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+        'confirmPassword': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Successful login
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+      // Failed login
+      // _showErrorDialog("Login Failed", "Invalid Credentials");
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registeration Failed: Please try again!")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -166,8 +199,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   GestureDetector(
                     onTap: () {
                       print("register pressed");
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (_) => HomeScreen()));
+                      _register(emailCtor.text, passCtor.text);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 14),

@@ -1,8 +1,11 @@
+// ignore_for_file: unnecessary_string_interpolations
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ArticleScreen extends StatefulWidget {
-  const ArticleScreen({super.key});
+  String urll;
+  ArticleScreen({required this.urll});
 
   @override
   State<ArticleScreen> createState() => _ArticleScreenState();
@@ -33,7 +36,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://www.healthline.com/nutrition'));
+      ..loadRequest(Uri.parse("${widget.urll}"));
   }
 
   @override
