@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auth_healthcare_app/screens/login_screen.dart';
+import 'package:auth_healthcare_app/screens/onboarding_screen1.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     Timer(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+          context, MaterialPageRoute(builder: (context) => OnboardingScreen()));
     });
   }
 

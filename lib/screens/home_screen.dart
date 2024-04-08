@@ -1,6 +1,7 @@
 import 'package:auth_healthcare_app/models/doctor_details.dart';
 import 'package:auth_healthcare_app/models/health_articles.dart';
 import 'package:auth_healthcare_app/screens/article_screen.dart';
+import 'package:auth_healthcare_app/screens/onboarding_screen2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,14 +34,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     ),
-                    IconButton(
-                        onPressed: () {
-                          print("bell icon pressed");
-                        },
-                        icon: const Icon(
-                          Icons.notifications_rounded,
-                          size: 33,
-                        ))
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            print("bell icon pressed");
+                          },
+                          icon: Icon(
+                            Icons.notifications_rounded,
+                            color: Theme.of(context).primaryColor,
+                            size: 30,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            print("logout pressed");
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const OnboardingLoginSignUp()));
+                          },
+                          icon: Icon(
+                            Icons.logout_rounded,
+                            color: Theme.of(context).primaryColor,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 Row(
@@ -94,8 +116,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    // itemCount: doctors.length,
-                    itemCount: 5,
+                    itemCount: doctors.length,
+                    // itemCount: 5,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                         padding: const EdgeInsets.only(
