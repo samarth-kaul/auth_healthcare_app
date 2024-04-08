@@ -7,7 +7,7 @@ class OnboardingContent {
 
 List<OnboardingContent> contents = [
   OnboardingContent(
-    text: 'Consult with a doctor you trust',
+    text: 'Consult with a doctor\nyou trust',
     image: 'assets/images/onb1.png',
   ),
   OnboardingContent(
@@ -15,7 +15,7 @@ List<OnboardingContent> contents = [
     image: 'assets/images/onb2.png',
   ),
   OnboardingContent(
-    text: 'Get our online consultaion',
+    text: 'Get our\nonline consultaion',
     image: 'assets/images/onb3.png',
   ),
 ];

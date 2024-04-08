@@ -1,3 +1,4 @@
+import 'package:auth_healthcare_app/screens/best_docs_screen.dart';
 import 'package:auth_healthcare_app/screens/home_screen.dart';
 import 'package:auth_healthcare_app/screens/login_screen.dart';
 import 'package:auth_healthcare_app/screens/onboarding_screen1.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         primaryColor: const Color(0xff147B72),
       ),
-      home: SplashScreen(),
+      home: HomeScreen(),
     );
   }
 }

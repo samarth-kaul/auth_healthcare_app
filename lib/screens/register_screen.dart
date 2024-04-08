@@ -169,6 +169,8 @@ class RegisterScreenState extends State<RegisterScreen> {
                         ),
                         TextFormField(
                           controller: passCtor,
+                          obscureText: true,
+                          obscuringCharacter: "*",
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Color(0xffF3F3F3),
@@ -251,7 +253,15 @@ class RegisterScreenState extends State<RegisterScreen> {
                         GestureDetector(
                           onTap: () {
                             print("register pressed");
-                            _register(emailCtor.text, passCtor.text);
+                            if (emailCtor.text.isEmpty ||
+                                nameCtor.text.isEmpty ||
+                                passCtor.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Kindly enter your credentials carefully")));
+                            } else {
+                              _register(emailCtor.text, passCtor.text);
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 14),

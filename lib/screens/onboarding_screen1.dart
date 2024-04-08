@@ -49,16 +49,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
                 itemBuilder: (_, i) {
                   return Column(children: [
-                    Expanded(
-                      child: Image.asset(
-                        contents[i].image,
-                        // height: sHeight * 0.7,
-                        fit: BoxFit.cover,
-                      ),
+                    SizedBox(height: sHeight * 0.15),
+                    Image.asset(
+                      contents[i].image,
+                      height: sHeight * 0.55,
+                      // fit: BoxFit.cover,
                     ),
                     Container(
                       padding: const EdgeInsets.all(20),
-                      // height: sHeight * 0.3,
+                      height: sHeight * 0.3,
                       width: double.maxFinite,
                       decoration: const BoxDecoration(
                           color: Colors.white,
@@ -70,14 +69,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             BoxShadow(
                               color: Colors.grey,
                               spreadRadius: 10,
-                              offset: Offset(5, 5),
-                              blurRadius: 10,
+                              offset: Offset(7, 7),
+                              blurRadius: 19,
                             )
                           ]),
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 50,
+                            height: sHeight * 0.05,
                           ),
                           Text(
                             contents[i].text,
@@ -90,7 +89,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 40,
+                            height: sHeight * 0.05,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,6 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 ),
                               ),
                               FloatingActionButton(
+                                heroTag: UniqueKey(),
                                 backgroundColor: const Color(0xff147B72),
                                 onPressed: () {
                                   if (currentIndex == contents.length - 1) {

@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:auth_healthcare_app/models/UserLoginRequest.dart';
 import 'package:auth_healthcare_app/screens/home_screen.dart';
 import 'package:auth_healthcare_app/screens/register_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
@@ -79,6 +81,26 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<GoogleSignInAccount?> googleLogin() async {
+    print("google sign in pressed");
+    GoogleSignIn _googleSignIn = GoogleSignIn();
+    try {
+      var result = await _googleSignIn.signIn();
+
+      print("Email: ${result?.email}");
+      print("Name: ${result?.displayName}");
+      print("ID: ${result?.id}");
+      print("Image URL: ${result?.photoUrl}");
+      print("Auth Code: ${result?.serverAuthCode}");
+      // print(result?._idToken);
+
+      return result;
+    } catch (e) {
+      print(e.toString());
+    }
+    return null;
   }
 
   // void _showErrorDialog(String title, String content) {
@@ -162,6 +184,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         TextFormField(
                           controller: passCtor,
+                          obscureText: true,
+                          obscuringCharacter: "*",
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Color(0xffF3F3F3),
@@ -201,7 +225,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         GestureDetector(
                           onTap: () {
                             print("login pressed");
-                            login(emailCtor.text, passCtor.text);
+                            if (emailCtor.text.isEmpty ||
+                                passCtor.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          "Kindly enter your credentials")));
+                            } else {
+                              login(emailCtor.text, passCtor.text);
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -253,26 +285,42 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.black12)),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/google_svg.svg",
-                                height: sHeight * 0.05,
-                                width: sWidth * 0.05,
-                              ),
-                              SizedBox(width: sWidth * 0.06),
-                              const Text(
-                                "Sign in with Google",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                            ],
+                        GestureDetector(
+                          onTap: () async {
+                            var res = await googleLogin();
+                            if (res != null) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text("Google Sign-in failed.")));
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(color: Colors.black12)),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/google_svg.svg",
+                                  height: sHeight * 0.05,
+                                  width: sWidth * 0.05,
+                                ),
+                                SizedBox(width: sWidth * 0.06),
+                                const Text(
+                                  "Sign in with Google",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         const SizedBox(
