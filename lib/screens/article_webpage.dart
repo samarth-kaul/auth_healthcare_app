@@ -1,5 +1,7 @@
 // ignore_for_file: unnecessary_string_interpolations
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

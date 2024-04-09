@@ -1,7 +1,8 @@
 import 'package:auth_healthcare_app/models/doctor_details.dart';
 import 'package:auth_healthcare_app/models/health_articles.dart';
-import 'package:auth_healthcare_app/screens/article_screen.dart';
+import 'package:auth_healthcare_app/screens/article_webpage.dart';
 import 'package:auth_healthcare_app/screens/best_docs_screen.dart';
+import 'package:auth_healthcare_app/screens/doc_screen.dart';
 import 'package:auth_healthcare_app/screens/onboarding_screen2.dart';
 import 'package:auth_healthcare_app/widgets/image.dart';
 import 'package:flutter/cupertino.dart';
@@ -119,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -167,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,96 +208,111 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: doctors.length,
                     // itemCount: 5,
                     itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        padding: const EdgeInsets.only(
-                            left: 6, right: 6, top: 6, bottom: 6),
-                        margin: const EdgeInsets.only(right: 7),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Colors.black12)),
-                        width: sWidth * 0.38,
-                        // height: sHeight * 0.38,
-                        child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            CircleAvatar(
-                              radius: 45,
-                              backgroundImage: AssetImage(doctors[index].dp),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            FittedBox(
-                              child: Text(
-                                textAlign: TextAlign.center,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DocScreen(
+                                      name: doctors[index].name,
+                                      designation: doctors[index].designation,
+                                      distance: doctors[index].distance,
+                                      dp: doctors[index].dp,
+                                      rating: doctors[index].rating)));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                              left: 6, right: 6, top: 6, bottom: 6),
+                          margin: const EdgeInsets.only(right: 7),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: Colors.black12)),
+                          width: sWidth * 0.38,
+                          // height: sHeight * 0.38,
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 45,
+                                backgroundImage: AssetImage(doctors[index].dp),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                // textAlign: TextAlign.center,
                                 doctors[index].name,
                                 style: const TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.w600),
                               ),
-                            ),
-                            Text(
-                              doctors[index].designation,
-                              style: TextStyle(color: Colors.black38),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffE8F3F1),
-                                    borderRadius: BorderRadius.circular(5),
+                              // const SizedBox(
+                              //   height: 5,
+                              // ),
+                              Text(
+                                doctors[index].designation,
+                                style: const TextStyle(color: Colors.black38),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffE8F3F1),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.star_rounded,
+                                          size: 14,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                        Text(
+                                            " " +
+                                                doctors[index]
+                                                    .rating
+                                                    .toString(),
+                                            style: TextStyle(
+                                                color: Colors.black38)),
+                                      ],
+                                    ),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.star_rounded,
-                                        size: 14,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      Text(
-                                          " " +
-                                              doctors[index].rating.toString(),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.location_pin,
+                                          size: 14,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                        Text(
+                                          doctors[index].distance.toString() +
+                                              " km away",
                                           style:
-                                              TextStyle(color: Colors.black38)),
-                                    ],
+                                              TextStyle(color: Colors.black38),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.location_pin,
-                                        size: 14,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      Text(
-                                        doctors[index].distance.toString() +
-                                            " km away",
-                                        style: TextStyle(color: Colors.black38),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },
                   ),
                 ),
-                SizedBox(
-                  // height: sHeight * 0.01,
+                const SizedBox(
                   height: 10,
                 ),
-                // SvgPicture.asset(
-                //   "assets/card.svg",
-                //   height: sHeight * 0.28,
-                //   width: double.maxFinite,
-                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -319,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(
                   height: sHeight * 0.3,
-                  width: double.maxFinite,
+                  // width: double.maxFinite,
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
@@ -343,34 +359,43 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(color: Colors.black12)),
                           width: double.maxFinite,
-                          height: sHeight * 0.1,
+                          // height: sHeight * 0.1,
                           child: Row(
                             // mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Image.asset(
-                                articles[index].image,
-                                // height: sHeight * 0.6,
-                                width: sWidth * 0.3,
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(
+                                  articles[index].image,
+                                  // height: sHeight * 0.2,
+                                  // width: sWidth * 0.2,
+                                  scale: 2,
+                                ),
                               ),
                               SizedBox(
                                 width: sWidth * 0.1,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    articles[index].name,
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    articles[index].source,
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic),
-                                  ),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      articles[index].name,
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      articles[index].source,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
