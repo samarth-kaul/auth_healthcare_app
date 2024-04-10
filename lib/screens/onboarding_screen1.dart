@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  OnboardingScreen({super.key});
+  const OnboardingScreen({super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -56,7 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     count: contents.length,
                     onDotClicked: (index) {
                       pageController.animateToPage(index,
-                          duration: const Duration(milliseconds: 600),
+                          duration: const Duration(milliseconds: 300),
                           curve: Curves.easeIn);
                     },
                     effect: WormEffect(
@@ -67,7 +67,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   TextButton(
                     onPressed: () {
                       pageController.nextPage(
-                          duration: const Duration(milliseconds: 600),
+                          duration: const Duration(milliseconds: 300),
                           curve: Curves.easeIn);
                     },
                     child: const Text("NEXT"),
@@ -78,6 +78,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: PageView.builder(
+            onPageChanged: (index) {
+              setState(() {
+                isLastPage = contents.length - 1 == index;
+              });
+            },
             itemCount: contents.length,
             controller: pageController,
             itemBuilder: (context, index) {
@@ -103,14 +108,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget getStarted() {
     return Container(
-      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(15)),
+      width: MediaQuery.of(context).size.width * 0.9,
       height: 55,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const OnboardingLoginSignUp()));
+        },
         child: const Text(
           "Get Started",
-          style: TextStyle(),
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
         ),
       ),
     );
