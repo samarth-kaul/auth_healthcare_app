@@ -54,11 +54,56 @@ class _HomeScreenState extends State<HomeScreen> {
                         IconButton(
                           onPressed: () {
                             print("logout pressed");
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const OnboardingLoginSignUp()));
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10))),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        "NO",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                Theme.of(context).primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10))),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OnboardingLoginSignUp()));
+                                        },
+                                        child: const Text(
+                                          "YES",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                  ],
+                                  title: const Text(
+                                      "Are you sure you want to logout?"),
+                                );
+                              },
+                            );
                           },
                           icon: Icon(
                             Icons.logout_rounded,
@@ -311,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

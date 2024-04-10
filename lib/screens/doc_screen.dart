@@ -1,4 +1,5 @@
 import 'package:auth_healthcare_app/widgets/calender.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -21,25 +22,25 @@ class DocScreen extends StatefulWidget {
 }
 
 class _DocScreenState extends State<DocScreen> {
-  List<String> getConsecutiveMonths(DateTime startDate, int numberOfMonths) {
+  List<String> getConsecutiveDays(DateTime startDate, int numberOfMonths) {
     List<String> daysList = [];
-    for (int i = 0; i < numberOfMonths; i++) {
+    for (int i = 0; i < 30; i++) {
       // DateTime newDate = startDate.add(Duration(days: 30 * i));
       // String monthText = DateFormat('MMMM yyyy').format(newDate);
       // monthsList.add(monthText);
-      DateTime newDate = startDate.add(Duration(days: 30 * i));
+      DateTime newDate = startDate.add(Duration(days: i + 1));
       String formattedDay = DateFormat('dd').format(newDate);
       daysList.add(formattedDay);
     }
     return daysList;
   }
 
-  List<String> getConsecutiveDays(DateTime startDate, int numberOfMonths) {
+  List<String> getConsecutiveMonths(DateTime startDate, int numberOfMonths) {
     List<String> monthsList = [];
     for (int i = 0; i < numberOfMonths; i++) {
       DateTime newDate = startDate.add(Duration(days: 30 * i));
       String monthText = DateFormat('MMMM').format(newDate);
-      monthsList.add(monthText);
+      monthsList.add(monthText.substring(0, 3));
     }
     return monthsList;
   }
@@ -69,6 +70,7 @@ class _DocScreenState extends State<DocScreen> {
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -76,16 +78,12 @@ class _DocScreenState extends State<DocScreen> {
               margin: const EdgeInsets.only(bottom: 5),
               height: sHeight * 0.2,
               width: double.maxFinite,
-              // decoration: BoxDecoration(
-              //   borderRadius: BorderRadius.circular(15),
-              //   border: Border.all(color: Colors.black12),
-              // ),
               child: Row(
                 // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.asset(widget.dp),
-                  const SizedBox(
-                    width: 30,
+                  SizedBox(
+                    width: sWidth * 0.1,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,55 +155,159 @@ class _DocScreenState extends State<DocScreen> {
             ),
             Text(
               "Dr. ${widget.name} is a highly experienced ${widget.designation} with 10 years of expertise. They prioritize personalized care, stay updated with the latest medical advancements, and actively engage in community health initiatives to empower patients and ensure optimal outcomes.",
-              style: TextStyle(
-                  // fontSize: 20,
+              // maxLines: 6,
+              style: const TextStyle(
+                  fontSize: 18,
                   color: Colors.black54,
                   fontWeight: FontWeight.w500),
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Calender(
-            //         month: DateTime.now().day.toString(),
-            //         day: DateTime.now().month.toString()),
-            //     Calender(
-            //         month: DateTime.now().day.toString(),
-            //         day: DateTime.now().month.toString()),
-            //     Calender(
-            //         month: DateTime.now().day.toString(),
-            //         day: DateTime.now().month.toString()),
-            //     Calender(
-            //         month: DateTime.now().day.toString(),
-            //         day: DateTime.now().month.toString()),
-            //     Calender(
-            //         month: DateTime.now().day.toString(),
-            //         day: DateTime.now().month.toString()),
-            //   ],
-            // ),
-            Container(
-              height: 30,
+            SizedBox(
+              height: sHeight * 0.02,
+            ),
+            SizedBox(
+              // decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+              height: sHeight * 0.08,
+              // height: 70,
               child: ListView.builder(
                 itemCount: 6,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-                    height: 40,
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(10),
+                    // height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.blue[100],
-                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Center(
-                      child: Text(
-                        consecutiveMonths[index],
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    margin: const EdgeInsets.only(right: 9),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          consecutiveMonths[index],
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          consecutiveDays[index],
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ],
                     ),
                   );
                 },
               ),
             ),
+            SizedBox(
+              height: sHeight * 0.02,
+            ),
+            Container(
+              height: sHeight * 0.25,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("10:00 AM"),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("11:00 AM"),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("12:00 PM"),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("02:00 PM"),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("03:00 PM"),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("04:00 PM"),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("05:00 PM"),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("06:00 PM"),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.black12)),
+                        child: Text("07:00 PM"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: sHeight * 0.02,
+            ),
+            Container(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(20)),
+                child: const Center(
+                  child: Text(
+                    "Book Appointment",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                )),
           ],
         ),
       ),

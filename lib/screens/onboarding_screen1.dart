@@ -6,6 +6,7 @@ import 'package:auth_healthcare_app/widgets/image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
   OnboardingScreen({super.key});
@@ -16,19 +17,20 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int currentIndex = 0;
-  late PageController _controller;
+  final PageController pageController = PageController();
+  bool isLastPage = false;
 
-  @override
-  void initState() {
-    _controller = PageController(initialPage: 0);
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _controller = PageController(initialPage: 0);
+  //   super.initState();
+  // }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   pageController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,235 +38,74 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     var sHeight = size.height;
     var sWidth = size.width;
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-                controller: _controller,
-                itemCount: contents.length,
-                onPageChanged: (int index) {
-                  setState(() {
-                    currentIndex = index;
-                  });
+      bottomSheet: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: isLastPage ? getStarted() : Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+                onPressed: () {
+                  pageController.jumpToPage(contents.length - 1);
                 },
-                itemBuilder: (_, i) {
-                  return Column(children: [
-                    SizedBox(height: sHeight * 0.15),
-                    Image.asset(
-                      contents[i].image,
-                      height: sHeight * 0.55,
-                      // fit: BoxFit.cover,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      height: sHeight * 0.3,
-                      width: double.maxFinite,
-                      decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            topRight: Radius.circular(40),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              spreadRadius: 10,
-                              offset: Offset(7, 7),
-                              blurRadius: 19,
-                            )
-                          ]),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: sHeight * 0.05,
-                          ),
-                          Text(
-                            contents[i].text,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xFF101522),
-                              fontSize: 25,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          SizedBox(
-                            height: sHeight * 0.05,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                child: Row(
-                                  children: List.generate(
-                                    contents.length,
-                                    (index) => Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: currentIndex == index
-                                            ? const Color(0xff147B72)
-                                            : Colors.grey,
-                                      ),
-                                      height: 10,
-                                      width: currentIndex == index ? 25 : 10,
-                                      margin: const EdgeInsets.only(right: 5),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              FloatingActionButton(
-                                heroTag: UniqueKey(),
-                                backgroundColor: const Color(0xff147B72),
-                                onPressed: () {
-                                  if (currentIndex == contents.length - 1) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            const OnboardingLoginSignUp(),
-                                      ),
-                                    );
-                                  }
-                                  _controller.nextPage(
-                                    duration: const Duration(milliseconds: 100),
-                                    curve: Curves.bounceIn,
-                                  );
-                                },
-                                child: const Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]);
-                }),
-          ),
-        ],
+                child: const Text("SKIP")),
+            SmoothPageIndicator(
+              controller: pageController,
+              count: contents.length,
+              onDotClicked: (index){
+                pageController.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.easeIn)
+              },
+              effect: WormEffect(
+                  dotHeight: 10,
+                  dotWidth: 10,
+                  
+                  activeDotColor: Theme.of(context).primaryColor),
+            ),
+            TextButton(
+              onPressed: () {
+                pageController.nextPage(
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeIn);
+              },
+              child: const Text("NEXT"),
+            ),
+          ],
+        ),
+      ),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: PageView.builder(
+            itemCount: contents.length,
+            controller: pageController,
+            itemBuilder: (context, index) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(contents[index].image),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    contents[index].text,
+                    style: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              );
+            }),
       ),
     );
   }
+
+  Widget getStarted()
+  {
+    return Container(
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+      width: MediaQuery.of(context).size.width,
+      height: 55,
+      child: TextButton(onPressed: () {},
+      child: const Text("Get Started", style: TextStyle(),),),
+      );
+  }
 }
-
-
-
-
-// // Expanded(
-// //                 child: Container(
-// //                   decoration: const BoxDecoration(
-// //                     color: Colors.white,
-// //                     borderRadius: BorderRadius.only(
-// //                       topLeft: Radius.circular(40),
-// //                       topRight: Radius.circular(40),
-// //                     ),
-// //                   ),
-// //                   child: const Center(
-// //                     child: Text(
-// //                       "Consult with a doctor you trust",
-// //                       style: TextStyle(
-// //                         color: Color(0xFF101522),
-// //                         fontSize: 25,
-// //                         fontFamily: 'Inter',
-// //                         fontWeight: FontWeight.w700,
-// //                         height: 0.06,
-// //                       ),
-// //                     ),
-// //                   ),
-// //                 ),
-// //               ),
-// Scaffold(
-//       body: Center(
-//         child: SingleChildScrollView(
-//           child: 
-// Column(
-//             children: [
-//               Image.asset(
-//                 "assets/images/doc-patient.png",
-//                 height: sHeight * 0.7,
-//               ),
-//               Container(
-//                 padding: const EdgeInsets.all(20),
-//                 height: sHeight * 0.3,
-//                 width: double.maxFinite,
-//                 decoration: const BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius: BorderRadius.only(
-//                       topLeft: Radius.circular(40),
-//                       topRight: Radius.circular(40),
-//                     ),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.grey,
-//                         spreadRadius: 10,
-//                         offset: Offset(5, 5),
-//                         blurRadius: 10,
-//                       )
-//                     ]),
-//                 child: Column(
-//                   children: [
-//                     SizedBox(
-//                       height: 100,
-//                     ),
-//                     const Text(
-//                       "Consult with a doctor you trust",
-//                       style: TextStyle(
-//                         color: Color(0xFF101522),
-//                         fontSize: 25,
-//                         fontFamily: 'Inter',
-//                         fontWeight: FontWeight.w700,
-//                         height: 0.06,
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       height: 60,
-//                     ),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         Container(
-//                           child: Row(
-//                             children: List.generate(
-//                               3,
-//                               (index) => Container(
-//                                 decoration: BoxDecoration(
-//                                   borderRadius: BorderRadius.circular(20),
-//                                   color: Color(0xff147B72),
-//                                 ),
-//                                 height: 10,
-//                                 width: 10,
-//                                 margin: const EdgeInsets.only(right: 5),
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                         FloatingActionButton(
-//                           onPressed: () {},
-//                           child: const Icon(Icons.arrow_forward_ios_rounded),
-//                         )
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-
-
-// //               // Imagee(),
-// //               // Headline(),
-// //               // Text(
-// //               //   "Consult only with a doctor you trust",
-// //               //   style: TextStyle(
-// //               //     color: Color(0xFF101522),
-// //               //     fontSize: 22,
-// //               //     fontFamily: 'Inter',
-// //               //     fontWeight: FontWeight.w700,
-// //               //     height: 0.06,
-// //               //   ),
-// //               // ),
-// //             ],
-// //           ),
-// //         ),
-// //       ),
-//     );
