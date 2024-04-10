@@ -41,36 +41,39 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       bottomSheet: Container(
         color: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: isLastPage ? getStarted() : Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-                onPressed: () {
-                  pageController.jumpToPage(contents.length - 1);
-                },
-                child: const Text("SKIP")),
-            SmoothPageIndicator(
-              controller: pageController,
-              count: contents.length,
-              onDotClicked: (index){
-                pageController.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.easeIn)
-              },
-              effect: WormEffect(
-                  dotHeight: 10,
-                  dotWidth: 10,
-                  
-                  activeDotColor: Theme.of(context).primaryColor),
-            ),
-            TextButton(
-              onPressed: () {
-                pageController.nextPage(
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeIn);
-              },
-              child: const Text("NEXT"),
-            ),
-          ],
-        ),
+        child: isLastPage
+            ? getStarted()
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        pageController.jumpToPage(contents.length - 1);
+                      },
+                      child: const Text("SKIP")),
+                  SmoothPageIndicator(
+                    controller: pageController,
+                    count: contents.length,
+                    onDotClicked: (index) {
+                      pageController.animateToPage(index,
+                          duration: const Duration(milliseconds: 600),
+                          curve: Curves.easeIn);
+                    },
+                    effect: WormEffect(
+                        dotHeight: 10,
+                        dotWidth: 10,
+                        activeDotColor: Theme.of(context).primaryColor),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      pageController.nextPage(
+                          duration: const Duration(milliseconds: 600),
+                          curve: Curves.easeIn);
+                    },
+                    child: const Text("NEXT"),
+                  ),
+                ],
+              ),
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -98,14 +101,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget getStarted()
-  {
+  Widget getStarted() {
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       width: MediaQuery.of(context).size.width,
       height: 55,
-      child: TextButton(onPressed: () {},
-      child: const Text("Get Started", style: TextStyle(),),),
-      );
+      child: TextButton(
+        onPressed: () {},
+        child: const Text(
+          "Get Started",
+          style: TextStyle(),
+        ),
+      ),
+    );
   }
 }
