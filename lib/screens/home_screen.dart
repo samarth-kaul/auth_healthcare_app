@@ -4,6 +4,7 @@ import 'package:auth_healthcare_app/screens/article_webpage.dart';
 import 'package:auth_healthcare_app/screens/best_docs_screen.dart';
 import 'package:auth_healthcare_app/screens/doc_screen.dart';
 import 'package:auth_healthcare_app/screens/onboarding_screen2.dart';
+import 'package:auth_healthcare_app/screens/user_profile_screen.dart';
 import 'package:auth_healthcare_app/widgets/image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,130 +40,89 @@ class _HomeScreenState extends State<HomeScreen> {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            print("bell icon pressed");
-                          },
-                          icon: Icon(
-                            Icons.notifications_rounded,
-                            color: Theme.of(context).primaryColor,
-                            size: 30,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            print("logout pressed");
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                  ),
-                                  actions: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10))),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text(
-                                        "NO",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                Theme.of(context).primaryColor,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10))),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OnboardingLoginSignUp()));
-                                        },
-                                        child: const Text(
-                                          "YES",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        )),
-                                  ],
-                                  title: const Text(
-                                      "Are you sure you want to logout?"),
-                                );
-                              },
-                            );
-                          },
-                          icon: Icon(
-                            Icons.logout_rounded,
-                            color: Theme.of(context).primaryColor,
-                            size: 30,
-                          ),
-                        ),
-                      ],
+                    // Row(
+                    // children: [
+                    IconButton(
+                      onPressed: () {
+                        print("bell icon pressed");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const UserProfileScreen()));
+                      },
+                      icon: Icon(
+                        Icons.person_2_rounded,
+                        color: Theme.of(context).primaryColor,
+                        size: 30,
+                      ),
                     ),
+                    // IconButton(
+                    //   onPressed: () {
+                    //     print("logout pressed");
+                    //     showDialog(
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return AlertDialog(
+                    //           shape: const RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.all(
+                    //               Radius.circular(10),
+                    //             ),
+                    //           ),
+                    //           actions: [
+                    //             ElevatedButton(
+                    //               style: ElevatedButton.styleFrom(
+                    //                   shape: RoundedRectangleBorder(
+                    //                       borderRadius:
+                    //                           BorderRadius.circular(10))),
+                    //               onPressed: () {
+                    //                 Navigator.pop(context);
+                    //               },
+                    //               child: const Text(
+                    //                 "NO",
+                    //                 style: TextStyle(color: Colors.black),
+                    //               ),
+                    //             ),
+                    //             ElevatedButton(
+                    //                 style: ElevatedButton.styleFrom(
+                    //                     backgroundColor:
+                    //                         Theme.of(context).primaryColor,
+                    //                     shape: RoundedRectangleBorder(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(10))),
+                    //                 onPressed: () {
+                    //                   Navigator.pop(context);
+                    //                   Navigator.pushReplacement(
+                    //                       context,
+                    //                       MaterialPageRoute(
+                    //                           builder: (context) =>
+                    //                               const OnboardingLoginSignUp()));
+                    //                 },
+                    //                 child: const Text(
+                    //                   "YES",
+                    //                   style: TextStyle(
+                    //                       color: Colors.white,
+                    //                       fontWeight: FontWeight.bold),
+                    //                 )),
+                    //           ],
+                    //           title: const Text(
+                    //               "Are you sure you want to logout?"),
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    //   icon: Icon(
+                    //     Icons.logout_rounded,
+                    //     color: Theme.of(context).primaryColor,
+                    //     size: 30,
+                    //   ),
+                    // ),
                   ],
+                  // ),
+                  // ],
                 ),
                 const SizedBox(
                   height: 10,
-                ),
-                // SvgPicture.asset(
-                //   "assets/card.svg",
-                //   height: sHeight * 0.28,
-                //   width: double.maxFinite,
-                // ),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  height: sHeight * 0.2,
-                  decoration: BoxDecoration(
-                    color: Color(0xffE8F3F1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Enjoy protection for\nyour family health",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            margin: const EdgeInsets.only(top: 10),
-                            child: Center(
-                              child: Text(
-                                "Learn More",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                        ],
-                      ),
-                      Image.asset("assets/images/homepageimage.png"),
-                    ],
-                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -207,10 +167,54 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: sHeight * 0.05,
                           width: sWidth * 0.05,
                         ),
-                        Text("Doctor"),
+                        const Text("Doctor"),
                       ],
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  height: sHeight * 0.2,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffE8F3F1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Enjoy protection for\nyour family health",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            margin: const EdgeInsets.only(top: 10),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(30)),
+                            child: const Center(
+                              child: Text(
+                                "Learn More",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Image.asset("assets/images/homepageimage.png"),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 20,

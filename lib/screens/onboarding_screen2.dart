@@ -40,42 +40,44 @@ class OnboardingLoginSignUp extends StatelessWidget {
                   onTap: () {
                     print("login pressed");
                     Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => LoginScreen()));
+                        MaterialPageRoute(builder: (_) => const LoginScreen()));
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     width: double.infinity,
-                    child: Center(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(30)),
+                    child: const Center(
                         child: Text(
                       "Login",
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     )),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(30)),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => RegisterScreen()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const RegisterScreen()));
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     width: double.infinity,
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor),
+                        borderRadius: BorderRadius.circular(30)),
                     child: Center(
                         child: Text(
                       "Register",
                       style: TextStyle(
                           color: Theme.of(context).primaryColor, fontSize: 20),
                     )),
-                    decoration: BoxDecoration(
-                        border:
-                            Border.all(color: Theme.of(context).primaryColor),
-                        borderRadius: BorderRadius.circular(30)),
                   ),
                 ),
               ],
