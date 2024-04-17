@@ -22,7 +22,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
         primaryColor: const Color(0xff147B72),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff147B72)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xff147B72),
+        ),
       ),
       home: const SplashScreen(),
     );

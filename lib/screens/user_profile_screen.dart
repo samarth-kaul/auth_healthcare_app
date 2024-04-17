@@ -47,7 +47,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Column(
                           children: [
                             SvgPicture.asset("assets/Heartbeat.svg"),
-                            Row(
+                            const Row(
                               children: [
                                 Text(
                                   "215 ",
@@ -86,7 +86,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Column(
                           children: [
                             SvgPicture.asset("assets/Fire.svg"),
-                            Row(
+                            const Row(
                               children: [
                                 Text(
                                   "500",
@@ -104,7 +104,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 ),
                               ],
                             ),
-                            Text(
+                            const Text(
                               "Height",
                               style: TextStyle(
                                 color: Color(0xffFFFFFF),
@@ -126,7 +126,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Column(
                           children: [
                             SvgPicture.asset("assets/Barbell.svg"),
-                            Row(
+                            const Row(
                               children: [
                                 Text(
                                   "60",
@@ -144,7 +144,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 ),
                               ],
                             ),
-                            Text(
+                            const Text(
                               "Age",
                               style: TextStyle(
                                 color: Color(0xffFFFFFF),
