@@ -1,11 +1,7 @@
-import 'package:auth_healthcare_app/models/onboarding_model.dart';
-import 'package:auth_healthcare_app/screens/home_screen.dart';
-import 'package:auth_healthcare_app/screens/onboarding_screen2.dart';
-import 'package:auth_healthcare_app/widgets/headline.dart';
-import 'package:auth_healthcare_app/widgets/image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:auth_healthcare_app/Models/onboarding_model.dart';
+import 'package:auth_healthcare_app/View/home_screen.dart';
+import 'package:auth_healthcare_app/View/Splash/onboarding_screen2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {

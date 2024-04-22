@@ -1,41 +1,34 @@
 import 'dart:convert';
-import 'package:auth_healthcare_app/models/UserRegisterRequest.dart';
-import 'package:http/http.dart' as http;
-import 'package:auth_healthcare_app/screens/home_screen.dart';
-import 'package:auth_healthcare_app/screens/login_screen.dart';
-import 'package:auth_healthcare_app/screens/register_screen.dart';
+import 'package:auth_healthcare_app/Models/UserLoginRequest.dart';
+import 'package:auth_healthcare_app/View/home_screen.dart';
+import 'package:auth_healthcare_app/View/Auth/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailCtor = TextEditingController();
   TextEditingController passCtor = TextEditingController();
-  TextEditingController nameCtor = TextEditingController();
-  bool isChecked = false;
-  bool passwordsMatch = false;
-  String verificationToken = "";
-  bool registerSuccess = false;
   bool isLoading = false;
 
-  // Future<void> _register(String email, String password) async {
+  // Future<void> _login(String email, String password) async {
   //   final response = await http.post(
-  //     Uri.parse('YOUR_LOGIN_API_ENDPOINT'),
+  //     Uri.parse('http://10.0.0.72:5490/api/User/login'),
   //     headers: <String, String>{
   //       'Content-Type': 'application/json',
   //     },
   //     body: jsonEncode(<String, String>{
   //       'email': email,
   //       'password': password,
-  //       'confirmPassword': password,
   //     }),
   //   );
 
@@ -49,35 +42,34 @@ class RegisterScreenState extends State<RegisterScreen> {
   //     // Failed login
   //     // _showErrorDialog("Login Failed", "Invalid Credentials");
   //     ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Registeration Failed: Please try again!")));
+  //         SnackBar(content: Text("Login Failed: Invalid Credentials")));
   //   }
   // }
-  Future<void> _register(email, password) async {
+
+  Future<void> login(String email, String password) async {
     setState(() {
       isLoading = true;
     });
-    UserRegisterRequest user = UserRegisterRequest(
-        Email: email, Password: password, ConfirmPassword: password);
+    UserLoginRequest user = UserLoginRequest(Email: email, Password: password);
+
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.0.72:5490/api/User/register'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Charset': 'utf-8'
-        },
-        body: jsonEncode(user.toJson()),
-      );
+          Uri.parse("http://10.0.0.72:5490/api/User/login"),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Charset': 'utf-8'
+          },
+          body: jsonEncode(user.toJson()));
 
       if (response.statusCode == 200) {
         print(response.body.toString());
-        print("Registration successful!");
-        verificationToken = response.body.toString();
-        registerSuccess = true;
+        print("login successful");
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));
       } else {
-        print("Registration Failed - ${response.statusCode}: ${response.body}");
-        registerSuccess = false;
+        print("Login Failed - ${response.statusCode}: ${response.body}");
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Sign in failed")));
       }
       setState(() {
         isLoading = false;
@@ -85,6 +77,26 @@ class RegisterScreenState extends State<RegisterScreen> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<GoogleSignInAccount?> googleLogin() async {
+    print("google sign in pressed");
+    GoogleSignIn _googleSignIn = GoogleSignIn();
+    try {
+      var result = await _googleSignIn.signIn();
+
+      print("Email: ${result?.email}");
+      print("Name: ${result?.displayName}");
+      print("ID: ${result?.id}");
+      print("Image URL: ${result?.photoUrl}");
+      print("Auth Code: ${result?.serverAuthCode}");
+      // print(result?._idToken);
+
+      return result;
+    } catch (e) {
+      print(e.toString());
+    }
+    return null;
   }
 
   @override
@@ -110,8 +122,8 @@ class RegisterScreenState extends State<RegisterScreen> {
             : Scaffold(
                 appBar: AppBar(
                   centerTitle: true,
-                  title: Text(
-                    "Register",
+                  title: const Text(
+                    "Login",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -126,31 +138,10 @@ class RegisterScreenState extends State<RegisterScreen> {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: nameCtor,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Color(0xffF3F3F3),
-                            labelText: "Name",
-                            labelStyle: TextStyle(color: Colors.black38),
-                            prefixIcon: const Icon(
-                              Icons.person_2_rounded,
-                              color: Colors.black38,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 20.0),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
                           controller: emailCtor,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color(0xffF3F3F3),
+                            fillColor: const Color(0xffF3F3F3),
                             labelText: "Email",
                             labelStyle: const TextStyle(color: Colors.black38),
                             prefixIcon: const Icon(
@@ -165,7 +156,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                         TextFormField(
                           controller: passCtor,
@@ -173,7 +164,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                           obscuringCharacter: "*",
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color(0xffF3F3F3),
+                            fillColor: const Color(0xffF3F3F3),
                             labelText: "Password",
                             labelStyle: const TextStyle(color: Colors.black38),
                             prefixIcon: const Icon(
@@ -187,94 +178,47 @@ class RegisterScreenState extends State<RegisterScreen> {
                                 vertical: 15.0, horizontal: 20.0),
                           ),
                         ),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              // checkColor: Theme.of(context).primaryColor,
-                              activeColor: Theme.of(context).primaryColor,
-                              value: isChecked,
-                              onChanged: ((value) {
-                                setState(() {
-                                  isChecked = value!;
-                                });
-                              }),
-                            ),
-                            Flexible(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    const TextSpan(
-                                      text: 'I agree to the ',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: 'Terms of Service',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Theme.of(context)
-                                            .primaryColor, // Green color
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ' and ',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: 'Privacy Policy',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Theme.of(context)
-                                            .primaryColor, // Green color
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                         const SizedBox(
                           height: 10,
                         ),
+                        Row(
+                          children: [
+                            const Spacer(),
+                            Text(
+                              "Forgot Password?",
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         GestureDetector(
                           onTap: () {
-                            print("register pressed");
+                            print("login pressed");
                             if (emailCtor.text.isEmpty ||
-                                nameCtor.text.isEmpty ||
                                 passCtor.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                      "Kindly enter your credentials carefully")));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Kindly enter your credentials")));
                             } else {
-                              _register(emailCtor.text, passCtor.text);
+                              login(emailCtor.text, passCtor.text);
                             }
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             width: double.infinity,
-                            child: Center(
-                                child: Text(
-                              "Register",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            )),
                             decoration: BoxDecoration(
                                 color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(30)),
+                            child: const Center(
+                                child: Text(
+                              "Login",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            )),
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -282,7 +226,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "Already have an account? ",
+                              "Don't have an account? ",
                               style: TextStyle(color: Colors.black45),
                             ),
                             GestureDetector(
@@ -290,10 +234,11 @@ class RegisterScreenState extends State<RegisterScreen> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => LoginScreen()));
+                                        builder: (_) =>
+                                            const RegisterScreen()));
                               },
                               child: Text(
-                                "Login",
+                                "Register",
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     fontWeight: FontWeight.bold),
@@ -313,26 +258,43 @@ class RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.black12)),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/google_svg.svg",
-                                height: sHeight * 0.06,
-                                width: sWidth * 0.06,
-                              ),
-                              SizedBox(width: sWidth * 0.06),
-                              const Text(
-                                "Sign in with Google",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                            ],
+                        GestureDetector(
+                          onTap: () async {
+                            var res = await googleLogin();
+                            if (res != null) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const HomeScreen()));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Google Sign-in failed.")));
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(color: Colors.black12)),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/google_svg.svg",
+                                  height: sHeight * 0.05,
+                                  width: sWidth * 0.05,
+                                ),
+                                SizedBox(width: sWidth * 0.06),
+                                const Text(
+                                  "Sign in with Google",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -348,8 +310,8 @@ class RegisterScreenState extends State<RegisterScreen> {
                             children: [
                               SvgPicture.asset(
                                 "assets/fb_svg.svg",
-                                height: sHeight * 0.06,
-                                width: sWidth * 0.06,
+                                height: sHeight * 0.05,
+                                width: sWidth * 0.05,
                               ),
                               SizedBox(width: sWidth * 0.06),
                               const Text(
@@ -370,12 +332,11 @@ class RegisterScreenState extends State<RegisterScreen> {
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(color: Colors.black12)),
                           child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.values,
                             children: [
                               SvgPicture.asset(
                                 "assets/apple_svg.svg",
-                                height: sHeight * 0.06,
-                                width: sWidth * 0.06,
+                                height: sHeight * 0.05,
+                                width: sWidth * 0.05,
                               ),
                               SizedBox(width: sWidth * 0.06),
                               const Text(

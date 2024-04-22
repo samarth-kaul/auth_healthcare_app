@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:auth_healthcare_app/screens/login_screen.dart';
-import 'package:auth_healthcare_app/screens/onboarding_screen1.dart';
+import 'package:auth_healthcare_app/View/Auth/login_screen.dart';
+import 'package:auth_healthcare_app/View/Splash/onboarding_screen1.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

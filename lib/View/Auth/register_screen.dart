@@ -1,34 +1,41 @@
 import 'dart:convert';
-import 'package:auth_healthcare_app/models/UserLoginRequest.dart';
-import 'package:auth_healthcare_app/screens/home_screen.dart';
-import 'package:auth_healthcare_app/screens/register_screen.dart';
+import 'package:auth_healthcare_app/Models/UserRegisterRequest.dart';
+import 'package:http/http.dart' as http;
+import 'package:auth_healthcare_app/View/home_screen.dart';
+import 'package:auth_healthcare_app/View/Auth/login_screen.dart';
+import 'package:auth_healthcare_app/View/Auth/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class RegisterScreenState extends State<RegisterScreen> {
   TextEditingController emailCtor = TextEditingController();
   TextEditingController passCtor = TextEditingController();
+  TextEditingController nameCtor = TextEditingController();
+  bool isChecked = false;
+  bool passwordsMatch = false;
+  String verificationToken = "";
+  bool registerSuccess = false;
   bool isLoading = false;
 
-  // Future<void> _login(String email, String password) async {
+  // Future<void> _register(String email, String password) async {
   //   final response = await http.post(
-  //     Uri.parse('http://10.0.0.72:5490/api/User/login'),
+  //     Uri.parse('YOUR_LOGIN_API_ENDPOINT'),
   //     headers: <String, String>{
   //       'Content-Type': 'application/json',
   //     },
   //     body: jsonEncode(<String, String>{
   //       'email': email,
   //       'password': password,
+  //       'confirmPassword': password,
   //     }),
   //   );
 
@@ -42,38 +49,35 @@ class _LoginScreenState extends State<LoginScreen> {
   //     // Failed login
   //     // _showErrorDialog("Login Failed", "Invalid Credentials");
   //     ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Login Failed: Invalid Credentials")));
+  //         SnackBar(content: Text("Registeration Failed: Please try again!")));
   //   }
   // }
-
-  Future<void> login(String email, String password) async {
+  Future<void> _register(email, password) async {
     setState(() {
       isLoading = true;
     });
-    UserLoginRequest user = UserLoginRequest(Email: email, Password: password);
-
+    UserRegisterRequest user = UserRegisterRequest(
+        Email: email, Password: password, ConfirmPassword: password);
     try {
-      print("in try");
-      print(email);
-      print(password);
-      print(user);
       final response = await http.post(
-          Uri.parse("http://10.0.0.72:5490/api/User/login"),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Charset': 'utf-8'
-          },
-          body: jsonEncode(user.toJson()));
+        Uri.parse('http://10.0.0.72:5490/api/User/register'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Charset': 'utf-8'
+        },
+        body: jsonEncode(user.toJson()),
+      );
 
       if (response.statusCode == 200) {
         print(response.body.toString());
-        print("login successful");
+        print("Registration successful!");
+        verificationToken = response.body.toString();
+        registerSuccess = true;
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));
       } else {
-        print("Login Failed - ${response.statusCode}: ${response.body}");
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Sign in failed")));
+        print("Registration Failed - ${response.statusCode}: ${response.body}");
+        registerSuccess = false;
       }
       setState(() {
         isLoading = false;
@@ -82,46 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
       print(e.toString());
     }
   }
-
-  Future<GoogleSignInAccount?> googleLogin() async {
-    print("google sign in pressed");
-    GoogleSignIn _googleSignIn = GoogleSignIn();
-    try {
-      var result = await _googleSignIn.signIn();
-
-      print("Email: ${result?.email}");
-      print("Name: ${result?.displayName}");
-      print("ID: ${result?.id}");
-      print("Image URL: ${result?.photoUrl}");
-      print("Auth Code: ${result?.serverAuthCode}");
-      // print(result?._idToken);
-
-      return result;
-    } catch (e) {
-      print(e.toString());
-    }
-    return null;
-  }
-
-  // void _showErrorDialog(String title, String content) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(title),
-  //         content: Text(content),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text("OK"),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 appBar: AppBar(
                   centerTitle: true,
                   title: Text(
-                    "Login",
+                    "Register",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -162,12 +126,33 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 10,
                         ),
                         TextFormField(
+                          controller: nameCtor,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(0xffF3F3F3),
+                            labelText: "Name",
+                            labelStyle: TextStyle(color: Colors.black38),
+                            prefixIcon: const Icon(
+                              Icons.person_2_rounded,
+                              color: Colors.black38,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 15.0, horizontal: 20.0),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
                           controller: emailCtor,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Color(0xffF3F3F3),
                             labelText: "Email",
-                            labelStyle: TextStyle(color: Colors.black38),
+                            labelStyle: const TextStyle(color: Colors.black38),
                             prefixIcon: const Icon(
                               Icons.email_rounded,
                               color: Colors.black38,
@@ -180,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
                         TextFormField(
                           controller: passCtor,
@@ -202,37 +187,80 @@ class _LoginScreenState extends State<LoginScreen> {
                                 vertical: 15.0, horizontal: 20.0),
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                  // width: double.maxFinite,
-                                  ),
-                            ),
-                            Text(
-                              "Forgot Password?",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            )
-                          ],
-                        ),
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
                         SizedBox(
                           height: 15,
                         ),
+                        Row(
+                          children: [
+                            Checkbox(
+                              // checkColor: Theme.of(context).primaryColor,
+                              activeColor: Theme.of(context).primaryColor,
+                              value: isChecked,
+                              onChanged: ((value) {
+                                setState(() {
+                                  isChecked = value!;
+                                });
+                              }),
+                            ),
+                            Flexible(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'I agree to the ',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.black45,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Terms of Service',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context)
+                                            .primaryColor, // Green color
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' and ',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.black45,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Privacy Policy',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context)
+                                            .primaryColor, // Green color
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         GestureDetector(
                           onTap: () {
-                            print("login pressed");
+                            print("register pressed");
                             if (emailCtor.text.isEmpty ||
+                                nameCtor.text.isEmpty ||
                                 passCtor.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          "Kindly enter your credentials")));
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Kindly enter your credentials carefully")));
                             } else {
-                              login(emailCtor.text, passCtor.text);
+                              _register(emailCtor.text, passCtor.text);
                             }
                           },
                           child: Container(
@@ -240,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: double.infinity,
                             child: Center(
                                 child: Text(
-                              "Login",
+                              "Register",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             )),
@@ -254,7 +282,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "Don't have an account? ",
+                              "Already have an account? ",
                               style: TextStyle(color: Colors.black45),
                             ),
                             GestureDetector(
@@ -262,10 +290,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => RegisterScreen()));
+                                        builder: (_) => LoginScreen()));
                               },
                               child: Text(
-                                "Register",
+                                "Login",
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     fontWeight: FontWeight.bold),
@@ -285,42 +313,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        GestureDetector(
-                          onTap: () async {
-                            var res = await googleLogin();
-                            if (res != null) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeScreen()));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text("Google Sign-in failed.")));
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                border: Border.all(color: Colors.black12)),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/google_svg.svg",
-                                  height: sHeight * 0.05,
-                                  width: sWidth * 0.05,
-                                ),
-                                SizedBox(width: sWidth * 0.06),
-                                const Text(
-                                  "Sign in with Google",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                ),
-                              ],
-                            ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(color: Colors.black12)),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                "assets/google_svg.svg",
+                                height: sHeight * 0.06,
+                                width: sWidth * 0.06,
+                              ),
+                              SizedBox(width: sWidth * 0.06),
+                              const Text(
+                                "Sign in with Google",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(
@@ -336,8 +348,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               SvgPicture.asset(
                                 "assets/fb_svg.svg",
-                                height: sHeight * 0.05,
-                                width: sWidth * 0.05,
+                                height: sHeight * 0.06,
+                                width: sWidth * 0.06,
                               ),
                               SizedBox(width: sWidth * 0.06),
                               const Text(
@@ -358,11 +370,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(color: Colors.black12)),
                           child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.values,
                             children: [
                               SvgPicture.asset(
                                 "assets/apple_svg.svg",
-                                height: sHeight * 0.05,
-                                width: sWidth * 0.05,
+                                height: sHeight * 0.06,
+                                width: sWidth * 0.06,
                               ),
                               SizedBox(width: sWidth * 0.06),
                               const Text(

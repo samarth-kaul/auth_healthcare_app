@@ -1,5 +1,5 @@
-import 'package:auth_healthcare_app/models/doctor_details.dart';
-import 'package:auth_healthcare_app/screens/doc_screen.dart';
+import 'package:auth_healthcare_app/Models/doctor_details.dart';
+import 'package:auth_healthcare_app/View/doc_screen.dart';
 import 'package:flutter/material.dart';
 
 class BestDocsScreen extends StatefulWidget {

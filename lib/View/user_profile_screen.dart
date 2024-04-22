@@ -1,4 +1,4 @@
-import 'package:auth_healthcare_app/screens/onboarding_screen2.dart';
+import 'package:auth_healthcare_app/View/Splash/onboarding_screen2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

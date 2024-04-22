@@ -1,5 +1,5 @@
-import 'package:auth_healthcare_app/screens/login_screen.dart';
-import 'package:auth_healthcare_app/screens/register_screen.dart';
+import 'package:auth_healthcare_app/View/Auth/login_screen.dart';
+import 'package:auth_healthcare_app/View/Auth/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
