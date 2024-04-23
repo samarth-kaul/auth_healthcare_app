@@ -1,12 +1,13 @@
-import 'dart:convert';
-import 'package:auth_healthcare_app/Models/UserLoginRequest.dart';
+import 'package:auth_healthcare_app/Utilities/AppColors/app_colors.dart';
+import 'package:auth_healthcare_app/Utilities/Components/round_button.dart';
+import 'package:auth_healthcare_app/Utilities/Components/sign_in_options_container.dart';
+import 'package:auth_healthcare_app/Utilities/Routes/route_names.dart';
+import 'package:auth_healthcare_app/Utilities/utils.dart';
 import 'package:auth_healthcare_app/View/home_screen.dart';
-import 'package:auth_healthcare_app/View/Auth/register_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:auth_healthcare_app/ViewModel/auth_view_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,66 +19,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailCtor = TextEditingController();
   TextEditingController passCtor = TextEditingController();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
   bool isLoading = false;
-
-  // Future<void> _login(String email, String password) async {
-  //   final response = await http.post(
-  //     Uri.parse('http://10.0.0.72:5490/api/User/login'),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: jsonEncode(<String, String>{
-  //       'email': email,
-  //       'password': password,
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     // Successful login
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => HomeScreen()),
-  //     );
-  //   } else {
-  //     // Failed login
-  //     // _showErrorDialog("Login Failed", "Invalid Credentials");
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Login Failed: Invalid Credentials")));
-  //   }
-  // }
-
-  Future<void> login(String email, String password) async {
-    setState(() {
-      isLoading = true;
-    });
-    UserLoginRequest user = UserLoginRequest(Email: email, Password: password);
-
-    try {
-      final response = await http.post(
-          Uri.parse("http://10.0.0.72:5490/api/User/login"),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Charset': 'utf-8'
-          },
-          body: jsonEncode(user.toJson()));
-
-      if (response.statusCode == 200) {
-        print(response.body.toString());
-        print("login successful");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
-      } else {
-        print("Login Failed - ${response.statusCode}: ${response.body}");
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Sign in failed")));
-      }
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   Future<GoogleSignInAccount?> googleLogin() async {
     print("google sign in pressed");
@@ -104,6 +48,10 @@ class _LoginScreenState extends State<LoginScreen> {
     var size = MediaQuery.of(context).size;
     var sHeight = size.height;
     var sWidth = size.width;
+    if (kDebugMode) {
+      print("height of the screen: $sHeight");
+      print("width of the screen: $sWidth");
+    }
     return SafeArea(
       child: GestureDetector(
         onTap: () {
@@ -114,9 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: double.maxFinite,
                 width: double.maxFinite,
                 color: Colors.white,
-                child: Center(
-                  child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor),
+                child: const Center(
+                  child:
+                      CircularProgressIndicator(color: AppColors.primaryColor),
                 ),
               )
             : Scaffold(
@@ -138,15 +86,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 10,
                         ),
                         TextFormField(
+                          focusNode: emailFocusNode,
                           controller: emailCtor,
+                          onFieldSubmitted: (val) {
+                            Utils.fieldFocusChange(
+                                context, emailFocusNode, passwordFocusNode);
+                          },
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: const Color(0xffF3F3F3),
+                            fillColor: AppColors.textFieldFillColor,
                             labelText: "Email",
-                            labelStyle: const TextStyle(color: Colors.black38),
+                            labelStyle: const TextStyle(
+                                color: AppColors.textFieldLabelColor),
                             prefixIcon: const Icon(
                               Icons.email_rounded,
-                              color: Colors.black38,
+                              color: AppColors.textFieldPrefixIconColor,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20.0),
@@ -159,17 +113,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 20,
                         ),
                         TextFormField(
+                          focusNode: passwordFocusNode,
                           controller: passCtor,
                           obscureText: true,
-                          obscuringCharacter: "*",
+                          obscuringCharacter: ".",
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: const Color(0xffF3F3F3),
+                            fillColor: AppColors.textFieldFillColor,
                             labelText: "Password",
-                            labelStyle: const TextStyle(color: Colors.black38),
+                            labelStyle: const TextStyle(
+                                color: AppColors.textFieldLabelColor),
                             prefixIcon: const Icon(
                               Icons.lock_rounded,
-                              color: Colors.black38,
+                              color: AppColors.textFieldPrefixIconColor,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20.0),
@@ -181,13 +137,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
+                        const Row(
                           children: [
-                            const Spacer(),
+                            Spacer(),
                             Text(
                               "Forgot Password?",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
+                              style: TextStyle(color: AppColors.primaryColor),
                             )
                           ],
                         ),
@@ -196,29 +151,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            print("login pressed");
+                            if (kDebugMode) {
+                              print("login pressed");
+                            }
                             if (emailCtor.text.isEmpty ||
                                 passCtor.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Kindly enter your credentials")));
+                              Utils.snackBar(
+                                  "Kindly enter your credentials", context);
+                            } else if (passCtor.text.length < 6) {
+                              Utils.snackBar(
+                                  "Password length very small", context);
                             } else {
-                              login(emailCtor.text, passCtor.text);
+                              // login(emailCtor.text, passCtor.text);
+                              var data = {
+                                "Email": emailCtor.text,
+                                "Password": passCtor.text
+                              };
+                              AuthViewModel.loginApi(data, context);
                             }
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(30)),
-                            child: const Center(
-                                child: Text(
-                              "Login",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            )),
+                          child: const RoundButton(
+                            title: "Login",
+                            titleColor: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -231,16 +185,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            const RegisterScreen()));
+                                Navigator.pushNamed(
+                                    context, RouteNames.register);
                               },
-                              child: Text(
+                              child: const Text(
                                 "Register",
                                 style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: AppColors.primaryColor,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -262,90 +213,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () async {
                             var res = await googleLogin();
                             if (res != null) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const HomeScreen()));
+                              Navigator.pushNamed(context, RouteNames.home);
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Google Sign-in failed.")));
+                              Utils.snackBar("Google Sign-in failed", context);
                             }
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                border: Border.all(color: Colors.black12)),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/google_svg.svg",
-                                  height: sHeight * 0.05,
-                                  width: sWidth * 0.05,
-                                ),
-                                SizedBox(width: sWidth * 0.06),
-                                const Text(
-                                  "Sign in with Google",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                ),
-                              ],
-                            ),
+                          child: SignInOptionsContainer(
+                            sHeight: sHeight,
+                            sWidth: sWidth,
+                            title: "Login with Google",
+                            svgUrl: "assets/google_svg.svg",
                           ),
                         ),
                         const SizedBox(
                           height: 4,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.black12)),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/fb_svg.svg",
-                                height: sHeight * 0.05,
-                                width: sWidth * 0.05,
-                              ),
-                              SizedBox(width: sWidth * 0.06),
-                              const Text(
-                                "Sign in with Facebook",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                            ],
-                          ),
+                        SignInOptionsContainer(
+                          sHeight: sHeight,
+                          sWidth: sWidth,
+                          title: "Login with Facebook",
+                          svgUrl: "assets/fb_svg.svg",
                         ),
                         const SizedBox(
                           height: 4,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.black12)),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/apple_svg.svg",
-                                height: sHeight * 0.05,
-                                width: sWidth * 0.05,
-                              ),
-                              SizedBox(width: sWidth * 0.06),
-                              const Text(
-                                "Sign in with Apple",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                            ],
-                          ),
+                        SignInOptionsContainer(
+                          sHeight: sHeight,
+                          sWidth: sWidth,
+                          title: "Login with Apple",
+                          svgUrl: "assets/apple_svg.svg",
                         ),
                       ],
                     ),
@@ -356,3 +252,42 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+
+
+
+
+
+  // Future<void> login(String email, String password) async {
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   UserLoginRequest user = UserLoginRequest(Email: email, Password: password);
+
+  //   try {
+  //     final response = await http.post(
+  //         Uri.parse("http://10.0.0.72:5490/api/User/login"),
+  //         headers: <String, String>{
+  //           'Content-Type': 'application/json',
+  //           'Charset': 'utf-8'
+  //         },
+  //         body: jsonEncode(user.toJson()));
+
+  //     if (response.statusCode == 200) {
+  //       print(response.body.toString());
+  //       print("login successful");
+  //       Navigator.pushReplacement(context,
+  //           MaterialPageRoute(builder: (context) => const HomeScreen()));
+  //     } else {
+  //       print("Login Failed - ${response.statusCode}: ${response.body}");
+  //       ScaffoldMessenger.of(context)
+  //           .showSnackBar(const SnackBar(content: Text("Sign in failed")));
+  //     }
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
+

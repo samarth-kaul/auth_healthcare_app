@@ -1,5 +1,8 @@
 import 'dart:convert';
-import 'package:auth_healthcare_app/Models/UserRegisterRequest.dart';
+import 'package:auth_healthcare_app/Models/register_user_model.dart';
+import 'package:auth_healthcare_app/Utilities/AppColors/app_colors.dart';
+import 'package:auth_healthcare_app/Utilities/Components/sign_in_options_container.dart';
+import 'package:auth_healthcare_app/Utilities/Routes/route_names.dart';
 import 'package:http/http.dart' as http;
 import 'package:auth_healthcare_app/View/home_screen.dart';
 import 'package:auth_healthcare_app/View/Auth/login_screen.dart';
@@ -26,67 +29,6 @@ class RegisterScreenState extends State<RegisterScreen> {
   bool registerSuccess = false;
   bool isLoading = false;
 
-  // Future<void> _register(String email, String password) async {
-  //   final response = await http.post(
-  //     Uri.parse('YOUR_LOGIN_API_ENDPOINT'),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: jsonEncode(<String, String>{
-  //       'email': email,
-  //       'password': password,
-  //       'confirmPassword': password,
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     // Successful login
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => HomeScreen()),
-  //     );
-  //   } else {
-  //     // Failed login
-  //     // _showErrorDialog("Login Failed", "Invalid Credentials");
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Registeration Failed: Please try again!")));
-  //   }
-  // }
-  Future<void> _register(email, password) async {
-    setState(() {
-      isLoading = true;
-    });
-    UserRegisterRequest user = UserRegisterRequest(
-        Email: email, Password: password, ConfirmPassword: password);
-    try {
-      final response = await http.post(
-        Uri.parse('http://10.0.0.72:5490/api/User/register'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Charset': 'utf-8'
-        },
-        body: jsonEncode(user.toJson()),
-      );
-
-      if (response.statusCode == 200) {
-        print(response.body.toString());
-        print("Registration successful!");
-        verificationToken = response.body.toString();
-        registerSuccess = true;
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
-      } else {
-        print("Registration Failed - ${response.statusCode}: ${response.body}");
-        registerSuccess = false;
-      }
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -110,7 +52,7 @@ class RegisterScreenState extends State<RegisterScreen> {
             : Scaffold(
                 appBar: AppBar(
                   centerTitle: true,
-                  title: Text(
+                  title: const Text(
                     "Register",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -129,9 +71,9 @@ class RegisterScreenState extends State<RegisterScreen> {
                           controller: nameCtor,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color(0xffF3F3F3),
+                            fillColor: const Color(0xffF3F3F3),
                             labelText: "Name",
-                            labelStyle: TextStyle(color: Colors.black38),
+                            labelStyle: const TextStyle(color: Colors.black38),
                             prefixIcon: const Icon(
                               Icons.person_2_rounded,
                               color: Colors.black38,
@@ -150,7 +92,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                           controller: emailCtor,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color(0xffF3F3F3),
+                            fillColor: const Color(0xffF3F3F3),
                             labelText: "Email",
                             labelStyle: const TextStyle(color: Colors.black38),
                             prefixIcon: const Icon(
@@ -173,7 +115,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                           obscuringCharacter: "*",
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color(0xffF3F3F3),
+                            fillColor: const Color(0xffF3F3F3),
                             labelText: "Password",
                             labelStyle: const TextStyle(color: Colors.black38),
                             prefixIcon: const Icon(
@@ -190,7 +132,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                         // const SizedBox(
                         //   height: 10,
                         // ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Row(
@@ -225,7 +167,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    TextSpan(
+                                    const TextSpan(
                                       text: ' and ',
                                       style: TextStyle(
                                         fontSize: 13,
@@ -260,7 +202,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                                   content: Text(
                                       "Kindly enter your credentials carefully")));
                             } else {
-                              _register(emailCtor.text, passCtor.text);
+                              // _register(emailCtor.text, passCtor.text);
                             }
                           },
                           child: Container(
@@ -287,15 +229,12 @@ class RegisterScreenState extends State<RegisterScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => LoginScreen()));
+                                Navigator.pushNamed(context, RouteNames.login);
                               },
-                              child: Text(
+                              child: const Text(
                                 "Login",
                                 style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: AppColors.primaryColor,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -313,79 +252,27 @@ class RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.black12)),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/google_svg.svg",
-                                height: sHeight * 0.06,
-                                width: sWidth * 0.06,
-                              ),
-                              SizedBox(width: sWidth * 0.06),
-                              const Text(
-                                "Sign in with Google",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                            ],
-                          ),
-                        ),
+                        SignInOptionsContainer(
+                            sHeight: sHeight,
+                            sWidth: sWidth,
+                            title: "Sign-in with Google",
+                            svgUrl: "assets/google_svg.svg"),
                         const SizedBox(
                           height: 4,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.black12)),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/fb_svg.svg",
-                                height: sHeight * 0.06,
-                                width: sWidth * 0.06,
-                              ),
-                              SizedBox(width: sWidth * 0.06),
-                              const Text(
-                                "Sign in with Facebook",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                            ],
-                          ),
-                        ),
+                        SignInOptionsContainer(
+                            sHeight: sHeight,
+                            sWidth: sWidth,
+                            title: "Sign-in with Facebook",
+                            svgUrl: "assets/fb_svg.svg"),
                         const SizedBox(
                           height: 4,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.black12)),
-                          child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.values,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/apple_svg.svg",
-                                height: sHeight * 0.06,
-                                width: sWidth * 0.06,
-                              ),
-                              SizedBox(width: sWidth * 0.06),
-                              const Text(
-                                "Sign in with Apple",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                            ],
-                          ),
-                        ),
+                        SignInOptionsContainer(
+                            sHeight: sHeight,
+                            sWidth: sWidth,
+                            title: "Sign-in with Apple",
+                            svgUrl: "assets/apple_svg.svg"),
                       ],
                     ),
                   ),
@@ -395,3 +282,43 @@ class RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+
+
+
+
+
+  // Future<void> _register(email, password) async {
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   UserRegisterRequest user = UserRegisterRequest(
+  //       Email: email, Password: password, ConfirmPassword: password);
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse('http://10.0.0.72:5490/api/User/register'),
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/json',
+  //         'Charset': 'utf-8'
+  //       },
+  //       body: jsonEncode(user.toJson()),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       print(response.body.toString());
+  //       print("Registration successful!");
+  //       verificationToken = response.body.toString();
+  //       registerSuccess = true;
+  //       Navigator.pushReplacement(context,
+  //           MaterialPageRoute(builder: (context) => const HomeScreen()));
+  //     } else {
+  //       print("Registration Failed - ${response.statusCode}: ${response.body}");
+  //       registerSuccess = false;
+  //     }
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
+

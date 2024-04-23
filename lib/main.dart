@@ -1,3 +1,5 @@
+import 'package:auth_healthcare_app/Utilities/Routes/route_names.dart';
+import 'package:auth_healthcare_app/Utilities/Routes/routes.dart';
 import 'package:auth_healthcare_app/View/best_docs_screen.dart';
 import 'package:auth_healthcare_app/View/doc_screen.dart';
 import 'package:auth_healthcare_app/View/home_screen.dart';
@@ -26,7 +28,8 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xff147B72),
         ),
       ),
-      home: const SplashScreen(),
+      initialRoute: RouteNames.login,
+      onGenerateRoute: Routes.generateRoute,
     );
   }
 }
