@@ -3,12 +3,8 @@ import 'package:auth_healthcare_app/Models/health_articles.dart';
 import 'package:auth_healthcare_app/View/article_webpage.dart';
 import 'package:auth_healthcare_app/View/best_docs_screen.dart';
 import 'package:auth_healthcare_app/View/doc_screen.dart';
-import 'package:auth_healthcare_app/View/Splash/onboarding_screen2.dart';
 import 'package:auth_healthcare_app/View/user_profile_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HomeScreen extends StatefulWidget {

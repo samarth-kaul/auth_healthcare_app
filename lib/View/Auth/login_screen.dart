@@ -5,6 +5,7 @@ import 'package:auth_healthcare_app/Utilities/Routes/route_names.dart';
 import 'package:auth_healthcare_app/Utilities/utils.dart';
 import 'package:auth_healthcare_app/View/home_screen.dart';
 import 'package:auth_healthcare_app/ViewModel/auth_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -92,22 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             Utils.fieldFocusChange(
                                 context, emailFocusNode, passwordFocusNode);
                           },
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AppColors.textFieldFillColor,
-                            labelText: "Email",
-                            labelStyle: const TextStyle(
-                                color: AppColors.textFieldLabelColor),
-                            prefixIcon: const Icon(
-                              Icons.email_rounded,
-                              color: AppColors.textFieldPrefixIconColor,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 20.0),
-                          ),
+                          decoration: Utils.textFieldInputDecor(
+                              labelText: "Email",
+                              prefixIcon: Icons.email_rounded),
                         ),
                         const SizedBox(
                           height: 20,
@@ -117,21 +105,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: passCtor,
                           obscureText: true,
                           obscuringCharacter: ".",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AppColors.textFieldFillColor,
+                          decoration: Utils.textFieldInputDecor(
                             labelText: "Password",
-                            labelStyle: const TextStyle(
-                                color: AppColors.textFieldLabelColor),
-                            prefixIcon: const Icon(
-                              Icons.lock_rounded,
-                              color: AppColors.textFieldPrefixIconColor,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 20.0),
+                            prefixIcon: Icons.lock_rounded,
+                            suffixIcon: Icons.visibility_rounded,
                           ),
                         ),
                         const SizedBox(
@@ -162,7 +139,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               Utils.snackBar(
                                   "Password length very small", context);
                             } else {
-                              // login(emailCtor.text, passCtor.text);
                               var data = {
                                 "Email": emailCtor.text,
                                 "Password": passCtor.text
@@ -172,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: const RoundButton(
                             title: "Login",
-                            titleColor: Colors.white,
+                            titleColor: AppColors.whiteColor,
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -185,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(
+                                Navigator.pushReplacementNamed(
                                     context, RouteNames.register);
                               },
                               child: const Text(
@@ -200,11 +176,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        const Text(
-                          "OR",
-                          style: TextStyle(
-                              color: Color.fromARGB(115, 160, 136, 136),
-                              fontSize: 20),
+                        const Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
+                                color: Color.fromARGB(115, 160, 136, 136),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                              child: Text(
+                                "OR",
+                                style: TextStyle(
+                                    color: Color.fromARGB(115, 160, 136, 136),
+                                    fontSize: 20),
+                              ),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: Color.fromARGB(115, 160, 136, 136),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
                           height: 10,

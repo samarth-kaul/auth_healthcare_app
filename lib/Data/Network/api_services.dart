@@ -27,13 +27,17 @@ class ApiServices extends BaseApiServices {
     var jsonData;
     try {
       var response = await http
-          .post(Uri.parse(url),
-              headers: <String, String>{
-                'Content-Type': 'application/json',
-                'Charset': 'utf-8'
-              },
-              body: jsonEncode(data))
-          .timeout(const Duration(seconds: 10));
+          .post(
+            Uri.parse(url),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Charset': 'utf-8'
+            },
+            body: jsonEncode(data),
+          )
+          .timeout(
+            const Duration(seconds: 10),
+          );
       jsonData = jsonResponse(response);
     } on SocketException {
       throw InternetException('No Internet');

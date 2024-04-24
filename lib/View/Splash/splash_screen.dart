@@ -36,8 +36,8 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => OnboardingScreen()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()));
     });
   }
 
@@ -50,7 +50,6 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         child: AnimatedBuilder(
           animation: _controller,

@@ -1,8 +1,14 @@
 import 'dart:convert';
 import 'package:auth_healthcare_app/Models/register_user_model.dart';
+import 'package:auth_healthcare_app/Repository/auth_repository.dart';
 import 'package:auth_healthcare_app/Utilities/AppColors/app_colors.dart';
+import 'package:auth_healthcare_app/Utilities/Components/round_button.dart';
 import 'package:auth_healthcare_app/Utilities/Components/sign_in_options_container.dart';
 import 'package:auth_healthcare_app/Utilities/Routes/route_names.dart';
+import 'package:auth_healthcare_app/Utilities/utils.dart';
+import 'package:auth_healthcare_app/ViewModel/auth_view_model.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:auth_healthcare_app/View/home_screen.dart';
 import 'package:auth_healthcare_app/View/Auth/login_screen.dart';
@@ -44,9 +50,9 @@ class RegisterScreenState extends State<RegisterScreen> {
                 height: double.maxFinite,
                 width: double.maxFinite,
                 color: Colors.white,
-                child: Center(
-                  child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor),
+                child: const Center(
+                  child:
+                      CircularProgressIndicator(color: AppColors.primaryColor),
                 ),
               )
             : Scaffold(
@@ -68,43 +74,18 @@ class RegisterScreenState extends State<RegisterScreen> {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: nameCtor,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: const Color(0xffF3F3F3),
-                            labelText: "Name",
-                            labelStyle: const TextStyle(color: Colors.black38),
-                            prefixIcon: const Icon(
-                              Icons.person_2_rounded,
-                              color: Colors.black38,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 20.0),
-                          ),
-                        ),
+                            controller: nameCtor,
+                            decoration: Utils.textFieldInputDecor(
+                                labelText: "Name",
+                                prefixIcon: Icons.person_2_rounded)),
                         const SizedBox(
                           height: 10,
                         ),
                         TextFormField(
                           controller: emailCtor,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: const Color(0xffF3F3F3),
-                            labelText: "Email",
-                            labelStyle: const TextStyle(color: Colors.black38),
-                            prefixIcon: const Icon(
-                              Icons.email_rounded,
-                              color: Colors.black38,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 20.0),
-                          ),
+                          decoration: Utils.textFieldInputDecor(
+                              labelText: "Email",
+                              prefixIcon: Icons.email_rounded),
                         ),
                         const SizedBox(
                           height: 10,
@@ -113,33 +94,18 @@ class RegisterScreenState extends State<RegisterScreen> {
                           controller: passCtor,
                           obscureText: true,
                           obscuringCharacter: "*",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: const Color(0xffF3F3F3),
-                            labelText: "Password",
-                            labelStyle: const TextStyle(color: Colors.black38),
-                            prefixIcon: const Icon(
-                              Icons.lock_rounded,
-                              color: Colors.black38,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 20.0),
-                          ),
+                          decoration: Utils.textFieldInputDecor(
+                              labelText: "Password",
+                              suffixIcon: Icons.visibility,
+                              prefixIcon: Icons.lock_rounded),
                         ),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
                         const SizedBox(
                           height: 15,
                         ),
                         Row(
                           children: [
                             Checkbox(
-                              // checkColor: Theme.of(context).primaryColor,
-                              activeColor: Theme.of(context).primaryColor,
+                              activeColor: AppColors.primaryColor,
                               value: isChecked,
                               onChanged: ((value) {
                                 setState(() {
@@ -194,30 +160,30 @@ class RegisterScreenState extends State<RegisterScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            print("register pressed");
+                            if (kDebugMode) {
+                              print("register pressed");
+                            }
                             if (emailCtor.text.isEmpty ||
                                 nameCtor.text.isEmpty ||
                                 passCtor.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                      "Kindly enter your credentials carefully")));
+                              Utils.snackBar(
+                                  "Kindly enter your credentials carefully",
+                                  context);
+                            } else if (passCtor.text.length < 6) {
+                              Utils.snackBar(
+                                  "Password length very small", context);
                             } else {
-                              // _register(emailCtor.text, passCtor.text);
+                              Map data = {
+                                "Email": emailCtor.text,
+                                "Password": passCtor.text,
+                                "ConfirmPassword": passCtor.text,
+                              };
+                              AuthViewModel.registerApi(data, context);
                             }
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            width: double.infinity,
-                            child: Center(
-                                child: Text(
-                              "Register",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            )),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
+                          child: const RoundButton(
+                              title: "Register",
+                              titleColor: AppColors.whiteColor),
                         ),
                         const SizedBox(height: 15),
                         Row(
@@ -229,7 +195,8 @@ class RegisterScreenState extends State<RegisterScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(context, RouteNames.login);
+                                Navigator.pushReplacementNamed(
+                                    context, RouteNames.login);
                               },
                               child: const Text(
                                 "Login",
@@ -243,11 +210,28 @@ class RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        const Text(
-                          "OR",
-                          style: TextStyle(
-                              color: Color.fromARGB(115, 160, 136, 136),
-                              fontSize: 20),
+                        const Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
+                                color: Color.fromARGB(115, 160, 136, 136),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                              child: Text(
+                                "OR",
+                                style: TextStyle(
+                                    color: Color.fromARGB(115, 160, 136, 136),
+                                    fontSize: 20),
+                              ),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: Color.fromARGB(115, 160, 136, 136),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
                           height: 10,

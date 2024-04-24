@@ -9,7 +9,20 @@ class AuthViewModel {
       if (kDebugMode) {
         print(value.toString());
       }
-      Navigator.pushNamed(context, RouteNames.home);
+      Navigator.pushReplacementNamed(context, RouteNames.home);
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error.toString());
+      }
+    });
+  }
+
+  static Future<void> registerApi(dynamic data, BuildContext context) async {
+    AuthRepository.registerApi(data).then((value) {
+      if (kDebugMode) {
+        print(value.toString());
+      }
+      Navigator.pushReplacementNamed(context, RouteNames.home);
     }).onError((error, stackTrace) {
       if (kDebugMode) {
         print(error.toString());
