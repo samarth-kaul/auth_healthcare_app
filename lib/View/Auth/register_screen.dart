@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:auth_healthcare_app/Models/register_user_model.dart';
-import 'package:auth_healthcare_app/Repository/auth_repository.dart';
 import 'package:auth_healthcare_app/Utilities/AppColors/app_colors.dart';
 import 'package:auth_healthcare_app/Utilities/Components/round_button.dart';
 import 'package:auth_healthcare_app/Utilities/Components/sign_in_options_container.dart';
@@ -8,15 +5,7 @@ import 'package:auth_healthcare_app/Utilities/Routes/route_names.dart';
 import 'package:auth_healthcare_app/Utilities/utils.dart';
 import 'package:auth_healthcare_app/ViewModel/auth_view_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:auth_healthcare_app/View/home_screen.dart';
-import 'package:auth_healthcare_app/View/Auth/login_screen.dart';
-import 'package:auth_healthcare_app/View/Auth/register_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
