@@ -1,7 +1,5 @@
 import 'package:auth_healthcare_app/View/Splash/onboarding_screen2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -34,11 +32,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const CircleAvatar(
-                    radius: 50,
+                    radius: 70,
                     backgroundColor: Colors.black,
                   ),
-                  const SizedBox(
-                    height: 40,
+                  SizedBox(
+                    height: sHeight * 0.05,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -168,7 +166,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.only(right: 20, left: 20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -294,11 +292,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                   BorderRadius.circular(10))),
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        Navigator.pushReplacement(
+                                        Navigator.pushAndRemoveUntil(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const OnboardingLoginSignUp()));
+                                                builder: (_) =>
+                                                    const OnboardingLoginSignUp()),
+                                            (route) => false);
                                       },
                                       child: const Text(
                                         "YES",
